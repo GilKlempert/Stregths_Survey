@@ -1,0 +1,361 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
+// קטגוריות החוזקות
+const strengthCategories = {
+  'חוכמה וידע': ['סקרנות', 'אהבת הלמידה', 'שיפוט', 'כושר המצאה', 'אינטליגנציה חברתית', 'פרספקטיבה'],
+  'אומץ לב': ['תעוזה', 'התמדה', 'יושר'],
+  'אנושיות': ['טוב לב', 'אהבה'],
+  'צדק': ['אזרחות טובה', 'הגינות', 'מנהיגות'],
+  'מתינות': ['שליטה עצמית', 'זהירות', 'ענווה'],
+  'נשגבות': ['הערכה ליופי', 'הכרת תודה', 'תקווה', 'רוחניות', 'סלחנות', 'הומור', 'התלהבות']
+};
+
+// השאלות בשאלון
+const questions = [
+  {
+    section: 1,
+    strength: 'סקרנות',
+    questions: [
+      { text: 'אפילו כשאני לבדי, אף פעם לא משעמם לי', reverse: false },
+      { text: 'כשאני רוצה לדעת משהו, אני מחפש בספר או במחשב יותר מרוב הילדים בני גילי', reverse: false }
+    ]
+  },
+  {
+    section: 2,
+    strength: 'אהבת הלמידה',
+    questions: [
+      { text: 'אני כולי התלהבות כשאני לומד משהו חדש', reverse: false },
+      { text: 'אני שונא לבקר במוזיאונים', reverse: true }
+    ]
+  },
+  {
+    section: 3,
+    strength: 'שיפוט',
+    questions: [
+      { text: 'כשעולה בעיה בזמן משחק או פעילות עם חברים, אני מצליח בדרך-כלל להבין למה זה קרה', reverse: false },
+      { text: 'הורי תמיד אומרים לי שאני משתמש בשיפוט גרוע', reverse: true }
+    ]
+  },
+  {
+    section: 4,
+    strength: 'כושר המצאה',
+    questions: [
+      { text: 'יש לי תמיד רעיונות חדשים לדברים כיפיים שאפשר לעשות', reverse: false },
+      { text: 'יש לי דמיון פורה יותר מזה של רוב הילדים בגילי', reverse: false }
+    ]
+  },
+  {
+    section: 5,
+    strength: 'אינטליגנציה חברתית',
+    questions: [
+      { text: 'לא משנה באיזו קבוצת ילדים אני נמצא, אני תמיד מתאים', reverse: false },
+      { text: 'כשאני מרגיש שמח, עצוב או כועס, אני תמיד יודע מדוע', reverse: false }
+    ]
+  },
+  {
+    section: 6,
+    strength: 'פרספקטיבה',
+    questions: [
+      { text: 'אנשים תמיד אומרים לי שאני מתנהג בבגרות רבה יחסית לגילי', reverse: false },
+      { text: 'אני יודע מהם הדברים החשובים באמת בחיים', reverse: false }
+    ]
+  },
+  {
+    section: 7,
+    strength: 'תעוזה',
+    questions: [
+      { text: 'אני עומד על דעתי, גם כשאני פוחד', reverse: false },
+      { text: 'גם אם עלולים ללעוג לי, אני עושה מה שנכון בעינַי', reverse: false }
+    ]
+  },
+  {
+    section: 8,
+    strength: 'התמדה',
+    questions: [
+      { text: 'הורי משבחים אותי תמיד על כך שאני משלים כל מטלה שנותנים לי', reverse: false },
+      { text: 'כשאני מקבל מה שרציתי, זה בזכות מאמץ רב שהשקעתי בשביל זה', reverse: false }
+    ]
+  },
+  {
+    section: 9,
+    strength: 'יושר',
+    questions: [
+      { text: 'אני לא קורא לעולם יומן אישי או אי-מיילים של מישהו אחר', reverse: false },
+      { text: 'אני אשקר כדי להיחלץ מצרות', reverse: true }
+    ]
+  },
+  {
+    section: 10,
+    strength: 'טוב לב',
+    questions: [
+      { text: 'אני מתאמץ להיות נחמד לילדים חדשים בכיתה', reverse: false },
+      { text: 'בחודש האחרון עזרתי לקרובים לי בלי שביקשו ממני', reverse: false }
+    ]
+  },
+  {
+    section: 11,
+    strength: 'אהבה',
+    questions: [
+      { text: 'אני יודע שאני האדם החשוב ביותר בחיים למישהו', reverse: false },
+      { text: 'גם אם אני רב הרבה עם אחי, אחותי או עם בני דודים - בכל זאת אני אוהב אותם מאוד', reverse: false }
+    ]
+  },
+  {
+    section: 12,
+    strength: 'אזרחות טובה',
+    questions: [
+      { text: 'אני ממש נהנה להשתייך למועדון או קבוצה, שלא במסגרת הלימודים', reverse: false },
+      { text: 'בבית-הספר אני מצליח לעבוד טוב מאוד בקבוצה', reverse: false }
+    ]
+  },
+  {
+    section: 13,
+    strength: 'הגינות',
+    questions: [
+      { text: 'גם כשאיני אוהב מישהו, אני מתייחס אליו בהגינוּת', reverse: false },
+      { text: 'כשאני טועה, אני תמיד מודה בזה', reverse: false }
+    ]
+  },
+  {
+    section: 14,
+    strength: 'מנהיגות',
+    questions: [
+      { text: 'במשחק או בפעילות ספורטיבית עם אחרים, תמיד אני רוצה להיות המנהיג', reverse: false },
+      { text: 'כמנהיג זכיתי באמונם או בהערצתם של חברים או עמיתים בצוות', reverse: false }
+    ]
+  },
+  {
+    section: 15,
+    strength: 'שליטה עצמית',
+    questions: [
+      { text: 'אני מסוגל בקלות להפסיק לשחק במחשב או לצפות בטלוויזיה כשעלי לעשות זאת', reverse: false },
+      { text: 'אני מאחר תמיד לכל דבר', reverse: true }
+    ]
+  },
+  {
+    section: 16,
+    strength: 'זהירות',
+    questions: [
+      { text: 'אני מתרחק ממצבים ומילדים שעלולים לסבך אותי בצרות', reverse: false },
+      { text: 'מבוגרים אומרים לי תמיד שאני מקבל החלטות נבונות בדיבורים ובמעשים', reverse: false }
+    ]
+  },
+  {
+    section: 17,
+    strength: 'ענווה',
+    questions: [
+      { text: 'במקום לדבר על עצמי, אני מעדיף לתת לאחרים לדבר על עצמם', reverse: false },
+      { text: 'אנשים מתארים אותי כשוויצר', reverse: true }
+    ]
+  },
+  {
+    section: 18,
+    strength: 'הערכה ליופי',
+    questions: [
+      { text: 'אני אוהב להאזין למוסיקה או לצפות בסרטים או לרקוד או לראות הצגות תיאטרון - יותר מרוב האנשים שאני מכיר', reverse: false },
+      { text: 'אני אוהב לצפות בעצים משנים את צבעם בסתיו', reverse: false }
+    ]
+  },
+  {
+    section: 19,
+    strength: 'הכרת תודה',
+    questions: [
+      { text: 'כשאני חושב על חיי, אני יוכל למצוא דברים רבים שעליהם אני חש הכרת תודה', reverse: false },
+      { text: 'שכחתי לומר למורים שלי \'תודה\' כשהם עזרו לי', reverse: true }
+    ]
+  },
+  {
+    section: 20,
+    strength: 'תקווה',
+    questions: [
+      { text: 'אני חושב שבבגרותי אהיה אדם מאושר מאוד', reverse: false },
+      { text: 'כשאני מקבל ציון גרוע, אני חושב תמיד על הפעם הבאה, שבה אצליח יותר', reverse: false }
+    ]
+  },
+  {
+    section: 21,
+    strength: 'רוחניות',
+    questions: [
+      { text: 'אני מאמין שכל אדם הוא מיוחד ויש לו מטרה חשובה בחיים', reverse: false },
+      { text: 'כשדברים משתבשים בחיי, אמונתי הדתית עוזרת לי להרגיש יותר טוב', reverse: false }
+    ]
+  },
+  {
+    section: 22,
+    strength: 'סלחנות',
+    questions: [
+      { text: 'כשמישהו פוגע ברגשותי, אני לעולם לא מנסה להשיב לו או לה כגמולם או לנקום בהם', reverse: false },
+      { text: 'אני סולח לאנשים על טעויותיהם', reverse: false }
+    ]
+  },
+  {
+    section: 23,
+    strength: 'הומור',
+    questions: [
+      { text: 'רוב הילדים יגידו שכיף להיות איתי', reverse: false },
+      { text: 'כשמישהו מחברי במצב רוח רע, או כשאני במצב רוח רע - אני אומר משהו מצחיק כדי לשפר את המצב', reverse: false }
+    ]
+  },
+  {
+    section: 24,
+    strength: 'התלהבות',
+    questions: [
+      { text: 'אני אוהב את החיים שלי', reverse: false },
+      { text: 'כשאני מתעורר בכל בוקר, אני מלא שמחה לקראת היום החדש', reverse: false }
+    ]
+  }
+];
+
+const StrengthsSurvey = () => {
+  const [currentSection, setCurrentSection] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [showResults, setShowResults] = useState(false);
+
+  const handleAnswer = (questionIndex, value) => {
+    setAnswers({
+      ...answers,
+      [`${currentSection}-${questionIndex}`]: value
+    });
+  };
+
+  const calculateSectionScore = (section) => {
+    const q1Score = answers[`${section}-0`] || 0;
+    const q2Score = answers[`${section}-1`] || 0;
+    return q1Score + q2Score;
+  };
+
+  const calculateResults = () => {
+    const results = {};
+    questions.forEach((section, index) => {
+      results[section.strength] = calculateSectionScore(index);
+    });
+    return results;
+  };
+
+  const handleNext = () => {
+    if (currentSection < questions.length - 1) {
+      setCurrentSection(currentSection + 1);
+    } else {
+      setShowResults(true);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentSection > 0) {
+      setCurrentSection(currentSection - 1);
+    }
+  };
+
+  const getTopStrengths = (results) => {
+    return Object.entries(results)
+      .filter(([_, score]) => score >= 9)
+      .map(([strength]) => strength);
+  };
+
+  if (showResults) {
+    const results = calculateResults();
+    const topStrengths = getTopStrengths(results);
+
+    return (
+      <Card className="w-full max-w-3xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-right">תוצאות השאלון</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {topStrengths.length > 0 && (
+            <Alert className="mb-6">
+  <AlertDescription className="text-right">
+    החוזקות המרכזיות שלך (ציון 9 ומעלה):
+    <ul className="list-disc mr-6 mt-2">
+      {topStrengths.map(strength => (
+        <li key={strength}>{strength}</li>
+      ))}
+    </ul>
+  </AlertDescription>
+</Alert>
+          )}
+
+          {Object.entries(strengthCategories).map(([category, strengths]) => (
+            <div key={category} className="mb-8">
+              <h3 className="text-lg font-bold mb-4 text-right">{category}</h3>
+              {strengths.map((strength) => (
+                <div key={strength} className="mb-4">
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm">{results[strength] || 0}/10</span>
+                    <span>{strength}</span>
+                  </div>
+                  <Progress 
+                    value={(results[strength] || 0) * 10} 
+                    className={results[strength] >= 9 ? "bg-primary/20" : ""}
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const currentQuestionSet = questions[currentSection];
+
+  return (
+    <Card className="w-full max-w-2xl mx-auto">
+      <CardHeader>
+        <CardTitle className="text-right">
+          פרק {currentQuestionSet.section} - {currentQuestionSet.strength}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Progress value={(currentSection / questions.length) * 100} className="mb-4" />
+        
+        {currentQuestionSet.questions.map((question, idx) => (
+          <div key={idx} className="mb-8">
+            <p className="text-right mb-4">{question.text}</p>
+            <RadioGroup
+              dir="rtl"
+              className="flex flex-col space-y-2"
+              value={answers[`${currentSection}-${idx}`]?.toString()}
+              onValueChange={(value) => handleAnswer(idx, parseInt(value))}
+            >
+              {[
+                { label: 'מאוד לא מתאים לי', value: question.reverse ? 5 : 1 },
+                { label: 'לא מתאים לי', value: question.reverse ? 4 : 2 },
+                { label: 'נייטרלי', value: 3 },
+                { label: 'מתאים לי', value: question.reverse ? 2 : 4 },
+                { label: 'מאוד מתאים לי', value: question.reverse ? 1 : 5 }
+              ].map((option) => (
+                <div key={option.value} className="flex items-center space-x-2">
+                  <RadioGroupItem value={option.value.toString()} id={`q${idx}-${option.value}`} />
+                  <label htmlFor={`q${idx}-${option.value}`}>{option.label}</label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
+        ))}
+
+        <div className="flex justify-between mt-6">
+          <Button
+            onClick={handlePrevious}
+            disabled={currentSection === 0}
+          >
+            הקודם
+          </Button>
+          <Button
+            onClick={handleNext}
+            disabled={!answers[`${currentSection}-0`] || !answers[`${currentSection}-1`]}
+          >
+            {currentSection === questions.length - 1 ? 'סיים' : 'הבא'}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default StrengthsSurvey;
