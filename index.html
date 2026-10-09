@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spelling Ten — תרגול הכתבה באנגלית</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50' font-size='50'>📝</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Karla:wght@400;600&family=Heebo:wght@400;600&display=swap">
+<style>
+/* Layout: single centred column — practice panel above the reference list */
+:root{
+  --paper:#fbf7f0; --ink:#1c1a17; --muted:#6f6758; --rule:#e2d9c8;
+  --mark:#f2d64b; --good:#2f7d58; --bad:#b4442e; --card:#ffffff;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Heebo","Karla","Segoe UI",system-ui,sans-serif;
+  --en:"Karla","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#15161a; --ink:#f0ece4; --muted:#9a9384; --rule:#2e3038;
+  --mark:#e0c43f; --good:#67c396; --bad:#e08a72; --card:#1e2026; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --paper:#15161a; --ink:#f0ece4; --muted:#9a9384; --rule:#2e3038;
+  --mark:#e0c43f; --good:#67c396; --bad:#e08a72; --card:#1e2026; color-scheme:dark;}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:32px 56px;
+  display:flex;flex-direction:column;gap:28px}
+h1{font-family:var(--display);font-size:clamp(28px,6vw,42px);margin:0;letter-spacing:-.02em;
+  text-wrap:balance;direction:ltr;text-align:start}
+.sub{color:var(--muted);margin:6px 0 0;font-size:15px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:20px}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.modes button{font:inherit;font-size:14px;padding:8px 14px;border-radius:999px;border:1px solid var(--rule);
+  background:transparent;color:var(--muted);cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+.prompt{display:flex;align-items:center;gap:14px;flex-wrap:wrap;min-width:0}
+.speak{font:inherit;font-size:24px;width:64px;height:64px;flex:none;border-radius:50%;border:none;
+  background:var(--mark);color:#1c1a17;cursor:pointer;line-height:1}
+.speak:active{transform:scale(.95)}
+.cue{font-family:var(--display);font-size:clamp(24px,5vw,34px);min-width:0;word-break:break-word;flex:1 1 180px}
+.cue.quiet{color:var(--muted);font-family:var(--body);font-size:16px}
+
+.answer{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.answer input{flex:1 1 220px;min-width:0;font:inherit;font-size:18px;padding:12px 14px;border-radius:10px;
+  border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.answer input[dir="ltr"]{font-family:var(--en)}
+.answer button{font:inherit;font-size:16px;padding:12px 22px;border-radius:10px;border:none;
+  background:var(--ink);color:var(--paper);cursor:pointer}
+.verdict{margin-top:14px;font-size:17px;min-height:28px}
+.verdict.ok{color:var(--good)} .verdict.no{color:var(--bad)}
+.verdict b{font-family:var(--display);direction:ltr;display:inline-block}
+
+.meta{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted);
+  font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.meta button{font:inherit;font-size:14px;background:none;border:none;color:var(--muted);
+  text-decoration:underline;cursor:pointer;padding:0}
+
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:16px}
+th{text-align:start;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;padding:0 0 8px}
+td{padding:9px 0;border-top:1px solid var(--rule);vertical-align:top}
+td.en{font-family:var(--display);direction:ltr;text-align:left;width:44%}
+th.en{direction:ltr;text-align:left}
+td.he{color:var(--muted)}
+td.play{width:44px;text-align:end}
+td.play button{font-size:17px;background:none;border:none;cursor:pointer;color:var(--muted);padding:4px}
+
+.note{font-size:14px;color:var(--muted);margin:0}
+.note code{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:1px 5px;
+  font-size:13px;direction:ltr;display:inline-block}
+.warn{color:var(--bad);font-size:14px;margin-top:10px}
+:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Spelling Ten</h1>
+    <p class="sub">עשר מילות האנגלית להכתבה — להאזין, לכתוב, לבדוק.</p>
+  </header>
+
+  <section class="panel">
+    <p class="eyebrow">תרגול</p>
+    <div class="modes">
+      <button id="m-listen" aria-pressed="true">שומעים וכותבים</button>
+      <button id="m-heb" aria-pressed="false">מעברית לאנגלית</button>
+      <button id="m-mean" aria-pressed="false">מה הפירוש?</button>
+    </div>
+
+    <div class="prompt">
+      <button class="speak" id="speak" title="השמע את המילה" aria-label="השמע את המילה">🔊</button>
+      <div class="cue quiet" id="cue">לחצו על הרמקול כדי לשמוע</div>
+    </div>
+
+    <div class="answer">
+      <input id="input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="write the word…" dir="ltr">
+      <button id="check">בדיקה</button>
+    </div>
+    <p class="verdict" id="verdict"></p>
+    <p class="warn" id="nospeech" hidden>הדפדפן הזה לא תומך בהקראה. אפשר לתרגל במצב "מעברית לאנגלית".</p>
+
+    <div class="meta">
+      <span id="score">0 נכונות מתוך 0</span>
+      <span><button id="skip">דלג</button> · <button id="reset">אפס ניקוד</button></span>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">רשימת המילים</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th class="en">English</th><th>עברית</th><th></th></tr></thead>
+        <tbody id="list"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="note">לייבוא ל-Quizlet: Create → Import, הדבקת הרשימה, מפריד בין מונח לפירוש <code>Tab</code> ובין כרטיסים <code>New line</code>.</p>
+</div>
+
+<script>
+var WORDS = [
+  {en:"live",     he:"לגור",          alt:["לגור","גר","לחיות","חי"]},
+  {en:"many",     he:"הרבה",          alt:["הרבה","רבים","הרבה מאוד"]},
+  {en:"hobbies",  he:"תחביבים",       alt:["תחביבים","תחביב"]},
+  {en:"favorite", he:"אהוב / מועדף",  alt:["אהוב","מועדף","האהוב","אהוב עלי","הכי אהוב"]},
+  {en:"hero",     he:"גיבור",         alt:["גיבור"]},
+  {en:"brave",    he:"אמיץ",          alt:["אמיץ","אמיצה","אומץ"]},
+  {en:"kind",     he:"אדיב / טוב לב", alt:["אדיב","אדיבה","טוב לב","טוב־לב","נחמד","נחמדה"]},
+  {en:"actress",  he:"שחקנית",        alt:["שחקנית"]},
+  {en:"want",     he:"רוצה",          alt:["רוצה","לרצות","רוצים"]},
+  {en:"a lot of", he:"הרבה (של)",     alt:["הרבה","הרבה של","המון","המון של"]}
+];
+
+function $(id){ return document.getElementById(id); }
+
+var mode = "listen", pos = 0, order = shuffle(WORDS.map(function(_,i){return i;}));
+var right = 0, asked = 0, answered = false;
+var canSpeak = ("speechSynthesis" in window);
+
+function shuffle(a){
+  for (var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function current(){ return WORDS[order[pos]]; }
+
+function say(text){
+  if (!canSpeak) return;
+  try {
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US";
+    u.rate = 0.8;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+function norm(s){
+  return s.trim().toLowerCase()
+    .replace(/[.,!?;:"'׳״’]/g, "")
+    .replace(/\s+/g, " ");
+}
+
+function render(speakNow){
+  answered = false;
+  var w = current();
+  $("input").value = "";
+  $("verdict").textContent = "";
+  $("verdict").className = "verdict";
+  $("check").textContent = "בדיקה";
+
+  if (mode === "listen"){
+    $("cue").textContent = "הקשיבו וכתבו את המילה באנגלית";
+    $("cue").className = "cue quiet";
+    $("cue").dir = "rtl";
+    $("speak").hidden = false;
+    $("input").dir = "ltr";
+    $("input").placeholder = "write the word…";
+    if (speakNow) say(w.en);
+  } else if (mode === "heb"){
+    $("cue").textContent = w.he;
+    $("cue").className = "cue";
+    $("cue").dir = "rtl";
+    $("speak").hidden = true;
+    $("input").dir = "ltr";
+    $("input").placeholder = "write it in English…";
+  } else {
+    $("cue").textContent = w.en;
+    $("cue").className = "cue";
+    $("cue").dir = "ltr";
+    $("speak").hidden = !canSpeak;
+    $("input").dir = "rtl";
+    $("input").placeholder = "כתבו את הפירוש בעברית…";
+  }
+  $("input").focus();
+}
+
+function check(){
+  if (answered){ next(); return; }
+  var w = current(), v = norm($("input").value);
+  if (!v) return;
+
+  var ok = (mode === "mean")
+    ? w.alt.some(function(a){ return norm(a) === v; })
+    : norm(w.en) === v;
+
+  asked++;
+  if (ok) right++;
+  answered = true;
+
+  var el = $("verdict");
+  if (ok){
+    el.className = "verdict ok";
+    el.innerHTML = "נכון! <b>" + w.en + "</b> — " + w.he;
+  } else {
+    el.className = "verdict no";
+    el.innerHTML = "לא מדויק. התשובה: <b>" + (mode === "mean" ? w.he : w.en) + "</b>";
+  }
+  if (mode !== "mean") say(w.en);
+  $("check").textContent = "המילה הבאה";
+  $("score").textContent = right + " נכונות מתוך " + asked;
+}
+
+function next(){
+  pos++;
+  if (pos >= order.length){ order = shuffle(order); pos = 0; }
+  render(true);
+}
+
+function setMode(m){
+  mode = m;
+  [["listen","m-listen"],["heb","m-heb"],["mean","m-mean"]].forEach(function(p){
+    $(p[1]).setAttribute("aria-pressed", String(p[0] === m));
+  });
+  render(m === "listen");
+}
+
+$("m-listen").onclick = function(){ setMode("listen"); };
+$("m-heb").onclick    = function(){ setMode("heb"); };
+$("m-mean").onclick   = function(){ setMode("mean"); };
+$("speak").onclick    = function(){ say(current().en); };
+$("check").onclick    = check;
+$("skip").onclick     = next;
+$("reset").onclick    = function(){
+  right = 0; asked = 0;
+  $("score").textContent = "0 נכונות מתוך 0";
+};
+$("input").addEventListener("keydown", function(e){
+  if (e.key === "Enter"){ e.preventDefault(); check(); }
+});
+
+$("list").innerHTML = WORDS.map(function(w){
+  return '<tr><td class="en">' + w.en + '</td><td class="he">' + w.he +
+         '</td><td class="play"><button type="button" data-w="' + w.en +
+         '" title="השמע" aria-label="השמע ' + w.en + '">🔊</button></td></tr>';
+}).join("");
+
+$("list").addEventListener("click", function(e){
+  var b = e.target.closest("button");
+  if (b) say(b.getAttribute("data-w"));
+});
+
+if (!canSpeak) $("nospeech").hidden = false;
+render(false);
+</script>
+</body>
+</html>
