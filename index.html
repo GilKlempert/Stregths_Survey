@@ -217,9 +217,15 @@ function check(){
   var w = current(), v = norm($("input").value);
   if (!v) return;
 
-  var ok = (mode === "mean")
-    ? w.alt.some(function(a){ return norm(a) === v; })
-    : norm(w.en) === v;
+  var ok;
+  if (mode === "mean"){
+    // accept any listed synonym, the displayed string whole ("אהוב / מועדף"),
+    // or either half of it
+    var accepted = w.alt.concat([w.he], w.he.split("/"));
+    ok = accepted.some(function(a){ return norm(a) === v; });
+  } else {
+    ok = norm(w.en) === v;
+  }
 
   asked++;
   if (ok) right++;
