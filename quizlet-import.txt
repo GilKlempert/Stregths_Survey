@@ -1,0 +1,10 @@
+live	לגור
+many	הרבה
+hobbies	תחביבים
+favorite	אהוב / מועדף
+hero	גיבור
+brave	אמיץ
+kind	אדיב / טוב לב
+actress	שחקנית
+want	רוצה
+a lot of	הרבה (של)
