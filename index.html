@@ -173,7 +173,8 @@ function say(text){
 
 function norm(s){
   return s.trim().toLowerCase()
-    .replace(/[.,!?;:"'׳״’]/g, "")
+    .replace(/[.,!?;:"'()\[\]׳״’]/g, "")
+    .replace(/[‐-―־]/g, "-")
     .replace(/\s+/g, " ");
 }
 
